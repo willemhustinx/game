@@ -1,3 +1,5 @@
+package nl.willemhustinx.game;
+
 import javax.swing.*;
 import java.awt.*;
 

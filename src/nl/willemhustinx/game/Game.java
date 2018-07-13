@@ -1,3 +1,5 @@
+package nl.willemhustinx.game;
+
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 
