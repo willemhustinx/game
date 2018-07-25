@@ -2,6 +2,7 @@ package nl.willemhustinx.game;
 
 import java.awt.*;
 import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
 
 public class Game extends Canvas implements Runnable {
 
@@ -11,6 +12,8 @@ public class Game extends Canvas implements Runnable {
     private Thread thread;
     private Handler handler;
 
+    private BufferedImage level = null;
+
     public Game() {
         new Window(1000, 563, "Wizard Game", this);
         start();
@@ -18,7 +21,10 @@ public class Game extends Canvas implements Runnable {
         handler = new Handler();
         this.addKeyListener(new KeyInput(handler));
 
-        handler.addObject(new Wizard(100, 100, ID.Player, handler));
+        BufferdImageLoader bufferdImageLoader = new BufferdImageLoader();
+        level = bufferdImageLoader.loadImage("/wizard_level.png");
+
+        loadLevel(level);
 
     }
 
@@ -88,5 +94,25 @@ public class Game extends Canvas implements Runnable {
 
         g.dispose();
         bs.show();
+    }
+
+    private void loadLevel(BufferedImage image) {
+        int w = image.getWidth();
+        int h = image.getHeight();
+
+        for (int xx = 0; xx < w; xx++) {
+            for (int yy = 0; yy < h; yy++) {
+                int pixel = image.getRGB(xx, yy);
+                int red = (pixel >> 16) & 0xff;
+                int green = (pixel >> 8) & 0xff;
+                int blue = (pixel) & 0xff;
+
+                if (red == 255)
+                    handler.addObject(new Block(xx * 32, yy * 32, ID.Block));
+
+                if (blue == 255 && green == 0)
+                    handler.addObject(new Wizard(xx * 32, yy * 32, ID.Player, handler));
+            }
+        }
     }
 }
